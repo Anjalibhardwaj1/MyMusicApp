@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Music Library"
-            android:layout_marginTop="20dp"
-            android:textSize="25dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="15dp"/>
+    <TextView
+        style="@style/MusicLibraryHeading"
+        android:text="@string/music_library" />
 
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="15dp"
-            android:textSize="20dp"/>
+    <ListView
+        android:id="@+id/list_View"
+        style="@style/ListViewDesign" />
 
-    </LinearLayout>
+</LinearLayout>

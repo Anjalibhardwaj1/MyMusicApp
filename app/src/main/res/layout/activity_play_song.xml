@@ -1,40 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlaySongActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".PlaySongActivity">
 
     <TextView
         android:id="@+id/title"
-        android:layout_marginTop="50dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        style="@style/SongTitleDesign" />
 
     <TextView
         android:id="@+id/artist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center"/>
+        style="@style/ArtistTitleDesign" />
 
     <Button
         android:id="@+id/play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center"
-        android:text="Play"/>
+        android:background="#da70d6"
+        android:text="@string/play"
+        style="@style/Button"/>
 
     <Button
         android:id="@+id/pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Pause"/>
+        android:background="#ba55d3"
+        android:text="@string/pause"
+        style="@style/Button" />
 
 </LinearLayout>

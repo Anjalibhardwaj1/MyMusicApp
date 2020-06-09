@@ -13,9 +13,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,32 +23,46 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int STORAGE_PERMISSION_CODE = 1;
+    //These global strings are used to display Title and Artist on SongPlayerActivity
+    String currentTitle;
+    String currentArtist;
 
-    ArrayList<String> arrayList;
+    //ArrayList will store the song and artist from the Song Class
+    ArrayList<Song> songList;
 
+    //Displays song and artist on a listView
     ListView listView;
 
-    ArrayAdapter<String> adapter;
+    //This value will help us identify our storage permission request
+    private int STORAGE_PERMISSION_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //This code will check if the permission is already granted or not
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(MainActivity.this, "You Have Granted Access to Storage!", Toast.LENGTH_LONG).show();
+
+            //if the permission is granted this method will be used and the ListView will appear
             doStuff();
+
         } else {
+
+            //if the permission is not granted then we must request storage permission via this method
             requestStoragePermission();
         }
     }
 
-    private void requestStoragePermission () {
+    private void requestStoragePermission() {
+
+        //This code will explain to the user why we need to access their storage.
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             new AlertDialog.Builder(this)
                     .setTitle("Permission needed")
@@ -71,14 +83,18 @@ public class MainActivity extends AppCompatActivity {
                         }
                     })
                     .create().show();
+
+
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
         }
     }
+
+    //check the result of our permission
     @Override
-    public void onRequestPermissionsResult ( int requestCode, @NonNull String[] permissions,
-                                             @NonNull int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (requestCode == STORAGE_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
@@ -89,63 +105,65 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //this will close the app if the permission is denied
     public void endTask() {
-        // Is the user running Lollipop or above?
         if (Build.VERSION.SDK_INT >= 21) {
-            // If yes, run the fancy new function to end the app and
-            //  remove it from the task list.
             finishAndRemoveTask();
         } else {
-            // If not, then just end the app without removing it from
-            //  the task list.
             finish();
         }
     }
 
-    public void getMusic(){
+
+    //this will get the mp3 files from storage and add the title and artist of each song to the songList
+    public void getMusic() {
         ContentResolver contentResolver = getContentResolver();
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor songCursor = contentResolver.query(songUri, null, null, null, null);
 
-        if(songCursor != null && songCursor.moveToFirst()){
+        if (songCursor != null && songCursor.moveToFirst()) {
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
 
-            do{
+            do {
                 String currentTitle = songCursor.getString((songTitle));
                 String currentArtist = songCursor.getString((songArtist));
-                arrayList.add(currentTitle+ "\n" + currentArtist);
+                songList.add(new Song(currentTitle, currentArtist));
+
             } while (songCursor.moveToNext());
         }
     }
 
-    public void doStuff(){
-        listView = (ListView) findViewById(R.id.listView);
-        arrayList = new ArrayList<>();
+    //this is will give the data to the listView and when an item is clicked on the ListView it will move to the SongPlayActivity
+    public void doStuff() {
+        listView = (ListView) findViewById(R.id.list_View);
+        songList = new ArrayList<>();
         getMusic();
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
-        listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        final SongAdapter songAdt = new SongAdapter(this, songList);
+        listView.setAdapter(songAdt);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(MainActivity.this, PlaySongActivity.class);
+                Intent i = new Intent(MainActivity.this, SongPlayerActivity.class);
 
-
-
-                i.putExtra("ArtistString", currentArtist);
+                Song currSong = songList.get(position);
+                currentTitle = currSong.getTitle();
+                currentArtist = currSong.getArtist();
 
 
                 i.putExtra("TitleString", currentTitle);
+                i.putExtra("ArtistString", currentArtist);
                 startActivity(i);
 
             }
         });
 
-        adapter.sort(new Comparator<String>() {
-            @Override
-            public int compare(String lhs, String rhs) {
-                return lhs.compareTo(rhs);
+        //This will order the songs alphabetically 
+        Collections.sort(songList, new Comparator<Song>() {
+            public int compare(Song a, Song b) {
+                return a.getTitle().compareTo(b.getTitle());
             }
         });
     }
