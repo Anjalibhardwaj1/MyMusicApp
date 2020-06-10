@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".PlaySongActivity">
+    tools:context=".SongPlayerActivity">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/titleView"
         style="@style/SongTitleDesign" />
 
     <TextView
-        android:id="@+id/artist"
+        android:id="@+id/artistView"
         style="@style/ArtistTitleDesign" />
 
     <Button

@@ -14,17 +14,23 @@ public class SongPlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_song);
 
-        /*gets the information from the intent that was passed and casts it to a Intent object*/
+        //This gets the data from the intent that was passed and brings it to an Intent object
         Intent i = getIntent();
 
-         //gets the strings from the intent
+        //Gets the strings from the intent
         String artist = i.getStringExtra("ArtistString");
         String title = i.getStringExtra("TitleString");
 
-        TextView titleView = findViewById(R.id.title);
+        //Gets the titleView on the activity_play_song.xml
+        TextView titleView = findViewById(R.id.titleView);
+
+        //Sets the titleView to the title retrieved from the intent
         titleView.setText(title);
 
-        TextView artistView = findViewById(R.id.artist);
+        //Gets the artistView on the activity_play_song.xml
+        TextView artistView = findViewById(R.id.artistView);
+
+        //Sets the artistView to the artist retrieved from the intent
         artistView.setText(artist);
     }
 
